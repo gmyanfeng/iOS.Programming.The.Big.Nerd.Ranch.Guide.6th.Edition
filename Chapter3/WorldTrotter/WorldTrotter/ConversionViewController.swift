@@ -79,14 +79,27 @@ class ConversionViewController: UIViewController,UITextFieldDelegate {
         
         
         // prevent text field enter more than two decimal separator
-        let exitingTextHasDecimalSeparator = textField.text?.range(of: ".")
-        let replacementTextHasDecimalSeparator = string.range(of: ".")
+//        let exitingTextHasDecimalSeparator = textField.text?.range(of: ".")
+//        let replacementTextHasDecimalSeparator = string.range(of: ".")
+//        
+//        if exitingTextHasDecimalSeparator != nil,
+//           replacementTextHasDecimalSeparator != nil{
+//            return false
+//        }else{
+//            return true
+//        }
         
-        if exitingTextHasDecimalSeparator != nil,
-           replacementTextHasDecimalSeparator != nil{
-            return false
-        }else{
+        
+        let characterSet = NSCharacterSet.decimalDigits.inverted
+        
+        let filterStrings = string.components(separatedBy: characterSet)
+        
+        let textStr = filterStrings.joined(separator: "")
+        
+        if string == textStr {
             return true
+        }else{
+            return false
         }
     }
 }
