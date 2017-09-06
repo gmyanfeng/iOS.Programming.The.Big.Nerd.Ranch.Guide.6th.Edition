@@ -40,16 +40,34 @@ class ConversionViewController: UIViewController,UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateCelsiusLabel()
+        
+        let string = "Mon-Thurs:  8:00 - 18:00\nFri:        7:00 - 17:00\nSat-Sun:    10:00 - 15:00"
+        let skippedCharacters = NSMutableCharacterSet()
+        skippedCharacters.formIntersection(with: NSCharacterSet.punctuationCharacters)
+        skippedCharacters.formIntersection(with: NSCharacterSet.whitespaces)
+        
+        string.enumerateLines { (line, _) in
+            let scanner = Scanner(string: line)
+            scanner.charactersToBeSkipped = skippedCharacters as CharacterSet
+            
+            var startDay, endDay: NSString?
+            var startHour: Int = 0
+            var startMinute: Int = 0
+            var endHour: Int = 0
+            var endMinute: Int = 0
+            
+            scanner.scanCharacters(from: NSCharacterSet.letters, into: &startDay)
+            scanner.scanCharacters(from: NSCharacterSet.letters, into: &endDay)
+            
+            scanner.scanInt(&startHour)
+            scanner.scanInt(&startMinute)
+            scanner.scanInt(&endHour)
+            scanner.scanInt(&endMinute)
+        }
+        
     }
 
     @IBAction func fahrenheitFieldEditingChanged(_ textField: UITextField){
-//        celsiusLabel.text = textField.text
-        
-//        if let text = textField.text, text.isEmpty == false {
-//            celsiusLabel.text = text
-//        }else{
-//            celsiusLabel.text = "???"
-//        }
         
         if let text = textField.text, let value = Double(text) {
             fahrenheitvalue = Measurement(value: value, unit: .fahrenheit)
@@ -60,7 +78,6 @@ class ConversionViewController: UIViewController,UITextFieldDelegate {
     
     func updateCelsiusLabel() {
         if let celsiusValue = celsiusValue {
-//            celsiusLabel.text = "\(celsiusValue.value)"
             celsiusLabel.text = numberFormatter.string(from: NSNumber(value: celsiusValue.value))
         }else{
             celsiusLabel.text = "???"
@@ -88,7 +105,6 @@ class ConversionViewController: UIViewController,UITextFieldDelegate {
 //        }else{
 //            return true
 //        }
-        
         
         let characterSet = NSCharacterSet.decimalDigits.inverted
         
